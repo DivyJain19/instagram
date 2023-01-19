@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import { useState, useEffect } from "react";
+import UserInfo from "./components/UserInfo";
+import PhotoGrid from "./components/PhotoGrid";
 function App() {
+  const [userData, setUserData] = useState({});
+  const [userPhotos, setUserPhotos] = useState([]);
+  useEffect(() => {
+    async function getUserData() {
+      const res = await fetch("http://jsonplaceholder.typicode.com/users/1");
+      const data = await res.json();
+      setUserData(data);
+    }
+    async function getUserPhotos() {
+      const res = await fetch("http://jsonplaceholder.typicode.com/photos");
+      const data = await res.json();
+      console.log(data);
+      setUserPhotos(data);
+    }
+    getUserData();
+    getUserPhotos();
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {userData && <UserInfo userData={userData} />}
+      {userData && <PhotoGrid photos={userPhotos} />}
     </div>
   );
 }
